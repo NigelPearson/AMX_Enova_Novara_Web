@@ -1,0 +1,83 @@
+History:
+
+* Around 2010, the DVX-2100 series (6x2). Supported UDM twisted pair video I/O.
+  These had 4 DVI-I and 2 UDM inputs, 1 DVI + UDM output, and 1 VGA or DVI.
+  All support scaling, audio mixing, et c.
+  Nice coloured buttons on the front panel for input selection.
+
+* 2012, the DVX-2110 (4x2), DVX-2150/2155 (6x3) and DVX-3150/3155 (10x4).
+  DVI inputs now also support HDMI. UDM replaced by DXLINK (HDBaseT ish).
+  Loses the nice coloured input selection buttons.
+  Adds WebConsole - Web Browser based configuration based on Flash and JSON
+
+* 2015, DVX-2210 (4x2) DVX-2250/2255 (6x3), DVX-3250/3255.
+  USB ports. Second network port. Improved network security
+
+* Early 2020. DVX-2265-4K (6x2), DVX-3266-4K (8x4). Smaller (2 rack unit).
+  No DVI ins. Dante audio I/O. 4K 4:4:4 video. HTML5 web broser configuration.
+
+
+I settled on a DVX-2155HD-SP. It was the cheapest device (under $200AUS)
+that I could experiemnt with on my own (i.e. supported Web Browser config).
+
+What I have gleaned in 3 months research...
+
+
+
+
+The good:
+
+* Device has inbuilt test patterns and audio test tones
+
+* DXLINK interfaces seem to have good compatibity with HDbaseT
+
+* Video inputs can be named. On-screen display
+
+* Ability to display logo in place of black/blue on inactive inputs
+
+* The manuals document a lot of commands, wiring, et c.
+
+* AMX has a forum with a lot of stuff. Mainly Netlinx programming.
+
+* AMX lets private individuals join the forum.
+  You don't need to work for an AV install company
+
+
+
+The bad:
+
+* Even though you can telnet in and run the documented switcher commands,
+  the telnet interface doesn't give you any output from them.
+
+* Some of the documented commands don't work.
+  Luckily, I found amx-dvx-library on GitHub.
+  Look for INVALID or Redacted in amx-dvx-library/amx-dvx-api.axi 
+
+* VIDOUT_TESTPAT- doesn't seem to work,
+  even though it is listed as good in that library?
+
+* The CI command (Change Input?) fails -
+  from a NetLinx program only! - if a video input is inactive.
+  Doing a seperate VI (Video Input) and AI (Audio Input) command works,
+  and in my case displays the OSD/logo to confirm the switch occurred.
+  The real weirdness here is that from Telnet it works!
+  Interestingly, the WebConfig screen does let you
+
+* The OSD does not seem to work on output 3 (the DXLINK/HDbaseT one).
+
+* Android/Apple phones, iPads and tablets don't support Flash.
+  Most browsers are also droppng support,
+  which means the inbuild Web server is almost useless.
+  There is third-party software that supports iPhones,
+  but it seems to require AMX touchscreens to be configured in your system,
+  which is expensive
+
+
+
+The ugly:
+
+* I got an account on the forum, asked a few questions,
+  after a few weeks even answered an old unanswered question.
+  Two days later, my account is disabled and all my posts deleted.
+  No idea why, because no emails or messages.
+

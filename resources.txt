@@ -1,0 +1,36 @@
+
+https://sourceforge.net/projects/netlinx-modules/
+
+
+https://proforums.harman.com/amx/discussion/6654/amx-mobile
+https://github.com/jordevorstenbosch/AMXMobile
+Emulator for any G4 AMX panel   https://github.com/TheLord45/amxpanel                                      
+https://github.com/DavidVine/amx-dvx-library
+https://github.com/DavidVine/amx-device-library
+
+
+https://support.spinetix.com/wiki/AMX
+
+(Make https://docs.derivative.ca/TouchOSC interface?)
+
+Coding basics:  https://harman.remote-learner.net/course/view.php?id=963§ion=3
+
+https://harman.remote-learner.net/mod/page/view.php?id=412#
+https://use.vg/m7XESm  Dynamic room combining - concepts
+https://use.vg/LzQGat    dynamic room combining - Netlinx coding, two room example
+https://use.vg/IdQ7bG  Volume control programming of a matrix switcher
+https://use.vg/Xh6wi9  Older DVX
+https://use.vg/ty30IA   Incite Presentation Switches in house of worship
+https://use.vg/jwDn2z   VPX Presentation switches
+
+
+Tech notes: https://www.dropbox.com/sh/4b5cugk4pjuo5a6/AADAvYs65DGiszG7Fn8oZ8mRa?dl=0
+
+https://proforums.harman.com/amx/discussion/120119/level-event-programming-tips
+https://proforums.harman.com/amx/discussion/125424/netlinx-send-level
+
+https://proforums.harman.com/amx/discussion/137218/telnet-help-for-a-dvx-2155/p1?new=1
+https://proforums.harman.com/amx/discussion/121192/send-command-feedback-for-solecis-sdx510m
+https://proforums.harman.com/amx/discussion/7747/data-text-problem
+https://proforums.harman.com/amx/discussion/2673/data-text-still-limited-to-255-characters
+
