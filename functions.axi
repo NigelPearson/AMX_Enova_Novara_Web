@@ -27,6 +27,23 @@ DEFINE_FUNCTION fnSetVolume(DEV zone, INTEGER vol)
     volume[zone.PORT] = vol
 }
 
+// Given a percentage, set the bargraph on a Massio keypad
+
+DEFINE_FUNCTION fnSetBargraph(DEV dv, integer percent)
+{
+    local_var integer level
+
+    level = TYPE_CAST(percent * 2.55)	// (range = 0 - 255)
+    send_level dv, 1, level
+}
+
+// Update bargraph from (our stored) volume
+
+DEFINE_FUNCTION fnShowVolume(DEV dv, integer zone)
+{
+    fnSetBargraph(dv, volume[zone])
+}
+
 
 // Commands to mute video, or do a test pattern, don't seem to work:
 //      send_command zone, "'VIDOUT_MUTE-ON'"
@@ -87,6 +104,7 @@ DEFINE_FUNCTION fnVolDown(DEV zone)
 
 // Helper functions for DEV array event handlers
 DEFINE_FUNCTION fnZoneMute   (integer zone)   {   fnMute   (zones[zone])   }
+DEFINE_FUNCTION fnZoneMuteVid(integer zone)   { fnMuteVideo(zones[zone])   }
 DEFINE_FUNCTION fnZoneUnMute (integer zone)   {   fnUnMute (zones[zone])   }
 DEFINE_FUNCTION fnZoneVolUp  (integer zone)   {   fnVolUp  (zones[zone])   }
 DEFINE_FUNCTION fnZoneVolDown(integer zone)   {   fnVolDown(zones[zone])   }

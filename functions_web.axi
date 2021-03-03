@@ -11,8 +11,8 @@
 //	sServerBuffer
 //
 // I tried AMXmobile from GitHub, but it was too complicated for me
-// (e.g. I didn't want a password login page, or runtime config),
-// and that server port didn't reliably stay around for me
+// (e.g. I didn;t want a password login page, or runtime config),
+// ans that server port didn't reliably stay around for me
 
 DEFINE_FUNCTION fnReply(char s[])
 {

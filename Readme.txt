@@ -1,6 +1,7 @@
 Summary:
 This is a very simple coding example for an AMX Enova DVX-2155.
-* Attaches a few 8 button keypads for selecting 5 inputs, volume, and mute.
+* Attaches a few Novara 8 button keypads (selects 5 inputs, volume, and mute),
+  and a Massio 8 button plus knob keypad.
 * Implements a very primitive Web server, with a kind of REST API.
   This is for iPhone generation users, who are too lazy to press real buttons.
 * No fancy AMX touch screens or wireless presentation gateways.
@@ -10,8 +11,8 @@ It should be fully functioning, and a reasonable basis for modification.
 
 Contents:
 * This file   - Readme.txt
-* Source code - Enova_Novara_Web.apw,
-  functions.axi, functions_log.axi, functions_web.axi, main.axs
+* Source code - Enova_Novara_Web.apw, functions.axi,
+  functions_log.axi, functions_web.axi, main.axs, massio_events.axi
 * Screenshot of my Web interface in Safari - web_interface.jpg
 * Everything I know about old AMX Enovas - enova_gossip.txt
 * (mainly Netlinx) Programming resources - resources.txt

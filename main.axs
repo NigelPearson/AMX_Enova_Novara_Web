@@ -8,6 +8,7 @@ PROGRAM_NAME='Enova_Novara_Web'
 //			  DEV array to prevent button event code duplication
 // v19, 3rd Jan. 2021	: Added primitive web/telnet server
 // v20, 4th Jan. 2021	: Log output/errors from send_command
+// v21, 17th Jan. 2021	: Add a Massio keypad
 ///////////////////////////////////////////////////////////////////////////////
 
 
@@ -17,11 +18,13 @@ DEFINE_DEVICE
 
 dvSwitch = 5002
 
+// a Massio MKP-108 keypad
+dvMassioOne = 32222:1:1
+
 // and some Novara SP-08-AX-US-WH wall plate keypads
 
-dvKeypadOne   = 85:1:1
-dvKeypadTwo   = 86:1:1
-dvKeypadThree = 87:1:1
+dvNovaraOne = 85:1:1
+dvNovaraTwo = 86:1:1
 
 
 // The Enova 2x55 inputs:
@@ -54,7 +57,7 @@ DEFINE_CONSTANT
 
 INITIAL_VOLUME = 25
 
-// Overall button layout for my keypads:
+// Overall button layout for my Novara keypads:
 
 ZONE_OFF = 1    VOL_UP   = 2
 ROUTE_1  = 3    VOL_DOWN = 4
@@ -70,14 +73,21 @@ DEFINE_VARIABLE
 integer volume[3]	// Lazy alternative to level_events for volume mgt.
 
 volatile integer buttons[8] = {1, 2, 3, 4, 5, 6, 7, 8}
-volatile DEV     keypads[3] = {dvKeypadOne, dvKeypadTwo, dvKeypadThree}
+volatile DEV     keypads[2] = {dvNovaraOne, dvNovaraTwo} // Novaras only
 volatile DEV     zones[3]   = {dvZoneOne,   dvZoneTwo,   dvZoneThree}
+
+
+volatile DEV     allKeypads[3]    = {dvNovaraOne, dvNovaraTwo, dvMassioOne}
+volatile integer videoButtons[6]  = {1, 2, 3, 4, 5, 6}
+volatile integer volumeButtons[8] = {11, 12, 13}
+
 
 
 // To get responses from any possible send_command,
 // we need a data_event handler
 // which covers all possible switch devs:
-volatile DEV devs[8] = {dvInput1, dvInput2, dvInput3, dvInput4,
+volatile DEV devs[9] = {dvMassioOne,
+			dvInput1, dvInput2, dvInput3, dvInput4,
 			dvInput5, dvInput6, dvInput7, dvInput8}
 
 
@@ -117,7 +127,12 @@ fnSetVolume(dvZoneThree,INITIAL_VOLUME)
 Debug('Volumes set to INITIAL_VOLUME')
 
 
+
 DEFINE_EVENT
+
+#INCLUDE 'massio_events.axi'
+
+
 
 // As per the Language Reference Guide, there are many events for each button.
 // Not handling all of them falls thru to the MainLoop,
@@ -131,7 +146,7 @@ DEFINE_EVENT
 
 
 // ZONE_OFF. We can't actually power things down, so we just mute.
-// It also does an "undo" (unMute) if you hold the button.
+// This also does an "undo" (unMute) if you hold the button.
 
 button_event[keypads,ZONE_OFF]
 {
@@ -176,7 +191,7 @@ button_event[keypads,ROUTE_1]
 button_event[keypads,ROUTE_2]
 {		// Input 7 is audio-only, but for user feedback, also mute video
     push:	fnRouteAtoB(7,get_last(keypads))
-    release:	fnZoneMute(   get_last(keypads))
+    release:	fnZoneMuteVid(get_last(keypads))
 }
 
 button_event[keypads,ROUTE_3]
@@ -200,7 +215,7 @@ button_event[keypads,ROUTE_5]
 
 // Also handle the other events we get from button presses, to reduce CPU load
 
-channel_event[keypads,buttons] { on:{} off:{} }
+channel_event[allKeypads,buttons] { on:{} off:{} }
 
 
 
@@ -242,7 +257,7 @@ if (not bServerOpen)	{   WAIT 5   fnServerOpen()   }
 
 
 // Debug a keypad. Something like this would copy relay from button?
-//push [dvKeypadOne,ZONE_OFF] to [dvRelay,1]
+//push [dvNovaraOne,ZONE_OFF] to [dvRelay,1]
 
 
 (*****************************************************************)
