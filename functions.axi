@@ -27,23 +27,6 @@ DEFINE_FUNCTION fnSetVolume(DEV zone, INTEGER vol)
     volume[zone.PORT] = vol
 }
 
-// Given a percentage, set the bargraph on a Massio keypad
-
-DEFINE_FUNCTION fnSetBargraph(DEV dv, integer percent)
-{
-    local_var integer level
-
-    level = TYPE_CAST(percent * 2.55)	// (range = 0 - 255)
-    send_level dv, 1, level
-}
-
-// Update bargraph from (our stored) volume
-
-DEFINE_FUNCTION fnShowVolume(DEV dv, integer zone)
-{
-    fnSetBargraph(dv, volume[zone])
-}
-
 
 // Commands to mute video, or do a test pattern, don't seem to work:
 //      send_command zone, "'VIDOUT_MUTE-ON'"
@@ -52,6 +35,7 @@ DEFINE_FUNCTION fnShowVolume(DEV dv, integer zone)
 
 DEFINE_FUNCTION fnMuteVideo(DEV zone)
 {
+    send_command zone, "'VIDOUT_CONTRAST-0'"
     send_command zone, "'VIDOUT_BRIGHTNESS-0'"
 }
 
@@ -69,6 +53,7 @@ DEFINE_FUNCTION fnMute(DEV zone)
 DEFINE_FUNCTION fnUnMute(DEV zone)
 {
     fnSetVolume(zone,INITIAL_VOLUME)
+    send_command zone, "'VIDOUT_CONTRAST-50'"
     send_command zone, "'VIDOUT_BRIGHTNESS-50'"
 }
 
