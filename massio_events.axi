@@ -17,7 +17,10 @@ data_event[dvMassioOne]
     online:
     {						// Set brightness;
 	send_command dvMassioOne,"'@BRT-20,11'"	// bargraph 2/3, keys 1/3
-	fnSetBargraph(dvMassioOne,INITIAL_VOLUME)
+
+	// Volume starts at INITIAL_VOLUME %, so
+	send_level dvMassioOne, 1, INIT_VOL255	// show on bargraph
+	send_level dvMassioOne, 2, INIT_VOL255	// and store value
     }
 }
 
@@ -25,9 +28,16 @@ data_event[dvMassioOne]
 
 button_event[dvMassioOne,videoButtons]
 {
-    push:	fnRouteAtoB(get_last(videoButtons),3)
-    release:	{ fnUnMute(dvZoneThree); // Why does this act weird?
-fnShowVolume(dvMassioOne,3) }
+    push:
+    {
+	fnRouteAtoB(get_last(videoButtons),3)
+	fnUnMute(dvZoneThree)	// sets volume to INITIAL_VOLUME
+    }
+    release:
+    {
+	send_level dvMassioOne, 1, INIT_VOL255	// show on bargraph
+	send_level dvMassioOne, 2, INIT_VOL255	// and store value
+    }
 }
 
 // Inputs 7 & 8 are audio-only, but for user feedback, also mute video:
@@ -45,84 +55,49 @@ button_event[dvMassioOne,8]
 }
 
 
-// Mute. Ideally, we would actually power things down.
-// This also does an "undo" (unMute) if you hold the button.
+// Mute. No need for an UnMute function -
+// user can just turn the volume up!
 
 button_event[dvMassioOne,11]
 {
-    push:	fnZoneMute(3)
-    hold[5]:	fnZoneUnMute(3)		// .5 sec hold = unmute
-    release:	fnShowVolume(dvMassioOne,3)
+    push:
+    {
+	fnMute(dvZoneThree)
+    }
+    release:
+    {
+	send_level dvMassioOne, 1, 0	// UI feedback - blank the bargraph
+	send_level dvMassioOne, 2, 0	// and zero the stored value
+    }
 }
 
 // Channel 12 (up) and 13 (down).
-// fnVolUp() and fnVolDown() were designed for the keypad buttons,
-// and only make small increments unless you hold the button in (via repeats).
-// We basically re-implement those functions.
+// We now ignore these, and use level events from the dial
 
-button_event[dvMassioOne,12]
+level_event[dvMassioOne,2]
 {
-    push:
-    {
-	volume[3] = volume[3] + 7;
-    }
-    hold[1]:
-    {
-	//volume[3] = volume[3] + 15;
-	Debug("'Got HOLD on volume up'")
-    }
-    release:
-    {
-	if (volume[3] > 100)
-	{   volume[3] = 100 }
-	fnSetVolume(dvZoneThree,volume[3])
-	fnShowVolume(dvMassioOne,3)
-    }
-}
+    stack_var  integer dial
+    stack_var  integer percent
 
-button_event[dvMassioOne,13]
-{
-    push:
-    {
-	volume[3] = volume[3] - 10;
-    }
-    hold[1]:
-    {
-	//volume[3] = volume[3] - 15;
-	Debug("'Got HOLD on volume down'")
-    }
-    release:
-    {
-	if (volume[3] < 0)
-	{   volume[3] = 0 }
-	fnSetVolume(dvZoneThree,volume[3])
-	fnShowVolume(dvMassioOne,3)
-    }
-}
+    dial    = level.value
+    percent = TYPE_CAST(dial / 2.55)
+    
+    fnSetVolume(dvZoneThree,percent)
+    //volume[3] = percent;
 
-// Something like this would use Massio's internal level management:
-//
-//level_event[dvMassioOne,2]
-//{
-//    stack_var  integer dial
-//    stack_var  integer percent
-//
-//    dial      = level.value
-//    percent   = TYPE_CAST(dial / 2.55)
-//    volume[3] = percent;
-//    //fnShowVolume(dvMassioOne,3)
-//    //Debug("'Massio dial value: ', itoa(dial),
-//    //            '/255 (', itoa(percent), '%)'")
-//}
-//
-// but there are mute/unmute issues. If dial value was at 255,
-// and we mute, turning the dial up would do nothing -
-// because level_event only triggers if the level changes.
+    send_level dvMassioOne, 1, dial	// Update bargraph
+
+    Debug("'Massio dial value: ', itoa(dial),
+                '/255 (', itoa(percent), '%)'")
+}
 
 
 
 // Also handle any other events we get,
 // to reduce CPU load in mainloop
+
+button_event[dvMassioOne,12] { push:{} release:{} }
+button_event[dvMassioOne,13] { push:{} release:{} }
 
 channel_event[dvMassioOne,volumeButtons] { on:{} off:{} }
 

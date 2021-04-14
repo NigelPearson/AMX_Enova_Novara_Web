@@ -55,7 +55,8 @@ dvServer = 0:3:0	// Web/Telnet server plumbing
 
 DEFINE_CONSTANT
 
-INITIAL_VOLUME = 25
+INITIAL_VOLUME = 25	// Percent
+INIT_VOL255    = 64	// 25% of 0-255
 
 // Overall button layout for my Novara keypads:
 
